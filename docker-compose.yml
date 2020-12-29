@@ -12,7 +12,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./src:/var/www/html:delegated
+      - ./www:/var/www/html:delegated
     depends_on:
       - php
       - mysql
@@ -20,12 +20,12 @@ services:
       - laravel
 
   mysql:
-    image: mysql:5.7.29
+    image: mysql:latest
     container_name: mysql
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_DATABASE: homestead
       MYSQL_USER: homestead
@@ -44,7 +44,7 @@ services:
     volumes:
       - ./src:/var/www/html:delegated
     ports:
-      - "9000:9000"
+      - "127.0.0.1:9000:9000"
     networks:
       - laravel
 
@@ -54,7 +54,7 @@ services:
       dockerfile: composer.dockerfile
     container_name: composer
     volumes:
-      - ./src:/var/www/html
+      - ./www:/var/www/html
     working_dir: /var/www/html
     depends_on:
       - php
@@ -62,14 +62,6 @@ services:
     networks:
       - laravel
     entrypoint: ['composer', '--ignore-platform-reqs']
-
-  npm:
-    image: node:13.7
-    container_name: npm
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    entrypoint: ['npm']
 
   artisan:
     build:
